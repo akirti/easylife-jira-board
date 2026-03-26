@@ -1,13 +1,14 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import ReactFlow, {
+import {
+  ReactFlow,
   Controls,
   MiniMap,
   Background,
   useNodesState,
   useEdgesState,
   addEdge,
-} from 'reactflow';
-import 'reactflow/dist/style.css';
+} from '@xyflow/react';
+import '@xyflow/react/dist/style.css';
 import CanvasIssueNode from './CanvasIssueNode';
 import { useCanvasData } from '../hooks/useCanvasData';
 import { EDGE_STYLES, getTypeColor } from '../constants';
