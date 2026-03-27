@@ -18,7 +18,15 @@ function StatsHeader({ stats }) {
     );
   }
 
-  const byStatus = stats.by_status || {};
+  // API returns arrays of {status, count} / {issue_type, count} objects
+  const byStatusRaw = stats.by_status || [];
+  const byStatus = Array.isArray(byStatusRaw)
+    ? Object.fromEntries(byStatusRaw.map((s) => [s.status || s._id, s.count]))
+    : byStatusRaw;
+  const byTypeRaw = stats.by_type || [];
+  const byType = Array.isArray(byTypeRaw)
+    ? Object.fromEntries(byTypeRaw.map((t) => [t.issue_type || t._id, t.count]))
+    : byTypeRaw;
   const blockers = stats.blockers || 0;
   const overdue = stats.overdue || 0;
 
@@ -28,9 +36,9 @@ function StatsHeader({ stats }) {
       <div className="bg-white rounded-lg border border-gray-200 p-4">
         <p className="text-sm font-medium text-gray-500">Total Issues</p>
         <p className="text-2xl font-bold text-gray-900 mt-1">{stats.total || 0}</p>
-        {stats.by_type && (
+        {Object.keys(byType).length > 0 && (
           <div className="flex flex-wrap gap-1 mt-2">
-            {Object.entries(stats.by_type).slice(0, 4).map(([type, count]) => (
+            {Object.entries(byType).slice(0, 4).map(([type, count]) => (
               <span key={type} className="text-xs text-gray-500">
                 {type}: {count}
               </span>
