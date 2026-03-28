@@ -84,8 +84,12 @@ export default function BoardsView() {
 }
 
 function BoardCard({ board }) {
-  const taskCounts = board.task_counts || {};
-  const total = Object.values(taskCounts).reduce((sum, c) => sum + c, 0);
+  // API returns task_counts as [{issue_type, count}] array
+  const rawCounts = board.task_counts || [];
+  const taskCounts = Array.isArray(rawCounts)
+    ? Object.fromEntries(rawCounts.map((t) => [t.issue_type || t.name, t.count || t.value || 0]))
+    : rawCounts;
+  const total = board.total || Object.values(taskCounts).reduce((sum, c) => sum + c, 0);
 
   const pieData = Object.entries(taskCounts)
     .filter(([, count]) => count > 0)
