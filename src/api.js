@@ -49,8 +49,11 @@ export function createJiraApiClient(baseUrl, getToken) {
       client.get('/dashboard/blockers', { params: { project_key: projectKey } }).then((r) => r.data),
 
     // Sync controls
-    triggerSync: (projectKey) =>
-      client.post('/sync/trigger', null, { params: { project_key: projectKey } }).then((r) => r.data),
+    triggerSync: (projectKey, days) =>
+      client.post('/sync/trigger', null, { params: { project_key: projectKey, ...(days && { days }) } }).then((r) => r.data),
+
+    getSyncProgress: (projectKey) =>
+      client.get('/sync/progress', { params: { project_key: projectKey } }).then((r) => r.data),
 
     getSyncConfig: (projectKey) =>
       client.get('/sync/config', { params: { project_key: projectKey } }).then((r) => r.data),

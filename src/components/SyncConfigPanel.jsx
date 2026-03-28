@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useJiraApi } from '../hooks/useJiraApi';
 import {
   RotateCw,
@@ -11,10 +11,11 @@ import {
 } from 'lucide-react';
 
 const SYNC_PERIODS = [
-  { value: 1, label: '1 month' },
-  { value: 3, label: '3 months' },
-  { value: 6, label: '6 months' },
-  { value: 12, label: '12 months' },
+  { value: 30, label: '30 days' },
+  { value: 60, label: '60 days' },
+  { value: 90, label: '90 days' },
+  { value: 180, label: '180 days' },
+  { value: 365, label: '365 days' },
 ];
 
 const ARCHIVE_THRESHOLDS = [
@@ -22,6 +23,8 @@ const ARCHIVE_THRESHOLDS = [
   { value: 6, label: '6 months' },
   { value: 12, label: '12 months' },
 ];
+
+const POLL_INTERVAL_MS = 2000;
 
 /**
  * Sync configuration and controls panel.
@@ -32,7 +35,7 @@ export default function SyncConfigPanel({ projectKey }) {
 
   const [config, setConfig] = useState(null);
   const [attributeMapText, setAttributeMapText] = useState('{}');
-  const [syncPeriod, setSyncPeriod] = useState(3);
+  const [syncPeriod, setSyncPeriod] = useState(90);
   const [archiveThreshold, setArchiveThreshold] = useState(6);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -40,6 +43,8 @@ export default function SyncConfigPanel({ projectKey }) {
   const [archiving, setArchiving] = useState(false);
   const [feedback, setFeedback] = useState(null);
   const [jsonError, setJsonError] = useState(null);
+  const [syncProgress, setSyncProgress] = useState(null);
+  const pollRef = useRef(null);
 
   // Fetch config on mount
   const fetchConfig = useCallback(async () => {
@@ -48,7 +53,7 @@ export default function SyncConfigPanel({ projectKey }) {
     try {
       const data = await api.getSyncConfig(projectKey);
       setConfig(data);
-      setSyncPeriod(data.sync_period_months || 3);
+      setSyncPeriod(data.sync_period_days || data.sync_period_months * 30 || 90);
       setArchiveThreshold(data.archive_after_months || 6);
       setAttributeMapText(JSON.stringify(data.attribute_map || {}, null, 2));
     } catch (err) {
@@ -61,6 +66,43 @@ export default function SyncConfigPanel({ projectKey }) {
   useEffect(() => {
     fetchConfig();
   }, [fetchConfig]);
+
+  // Stop polling on unmount
+  useEffect(() => {
+    return () => {
+      if (pollRef.current) clearInterval(pollRef.current);
+    };
+  }, []);
+
+  // Poll sync progress
+  const startPolling = useCallback(() => {
+    if (pollRef.current) clearInterval(pollRef.current);
+
+    pollRef.current = setInterval(async () => {
+      try {
+        const progress = await api.getSyncProgress(projectKey);
+        setSyncProgress(progress);
+
+        if (progress.status === 'completed' || progress.status === 'error') {
+          clearInterval(pollRef.current);
+          pollRef.current = null;
+          setSyncing(false);
+          fetchConfig(); // Refresh last sync time
+
+          if (progress.status === 'completed') {
+            setFeedback({ type: 'success', message: progress.message });
+          } else {
+            setFeedback({ type: 'error', message: progress.message });
+          }
+
+          // Clear progress after a delay
+          setTimeout(() => setSyncProgress(null), 5000);
+        }
+      } catch {
+        // Ignore polling errors
+      }
+    }, POLL_INTERVAL_MS);
+  }, [api, projectKey, fetchConfig]);
 
   // Validate JSON as user types
   const handleAttributeMapChange = useCallback((text) => {
@@ -93,7 +135,7 @@ export default function SyncConfigPanel({ projectKey }) {
 
       await api.updateSyncConfig({
         project_key: projectKey,
-        sync_period_months: syncPeriod,
+        sync_period_days: syncPeriod,
         archive_after_months: archiveThreshold,
         attribute_map: attributeMap,
       });
@@ -105,21 +147,27 @@ export default function SyncConfigPanel({ projectKey }) {
     }
   }, [api, projectKey, syncPeriod, archiveThreshold, attributeMapText, jsonError]);
 
-  // Trigger sync
+  // Trigger sync (background)
   const handleSync = useCallback(async () => {
     setSyncing(true);
     setFeedback(null);
+    setSyncProgress(null);
     try {
-      const result = await api.triggerSync(projectKey);
-      const count = result.synced_count ?? result.count ?? '?';
-      setFeedback({ type: 'success', message: `Sync complete. ${count} issues synced.` });
-      fetchConfig(); // Refresh last sync time
+      await api.triggerSync(projectKey, syncPeriod);
+      // Start polling for progress
+      startPolling();
     } catch (err) {
-      setFeedback({ type: 'error', message: `Sync failed: ${err.message}` });
-    } finally {
       setSyncing(false);
+      if (err.message?.includes('409') || err.message?.includes('already in progress')) {
+        setFeedback({ type: 'error', message: 'Sync already in progress.' });
+        // Start polling to show existing progress
+        startPolling();
+        setSyncing(true);
+      } else {
+        setFeedback({ type: 'error', message: `Sync failed: ${err.message}` });
+      }
     }
-  }, [api, projectKey, fetchConfig]);
+  }, [api, projectKey, syncPeriod, startPolling]);
 
   // Trigger archive
   const handleArchive = useCallback(async () => {
@@ -145,6 +193,11 @@ export default function SyncConfigPanel({ projectKey }) {
     );
   }
 
+  const progressPercent = syncProgress && syncProgress.total_estimated > 0
+    ? Math.min(Math.round((syncProgress.synced / syncProgress.total_estimated) * 100), 99)
+    : 0;
+  const showProgress = syncProgress && syncProgress.status !== 'idle';
+
   return (
     <div className="space-y-6 max-w-2xl">
       {/* Last Sync Info */}
@@ -169,9 +222,9 @@ export default function SyncConfigPanel({ projectKey }) {
             </span>
           </div>
           <div>
-            <span className="text-gray-500">Total Issues:</span>{' '}
+            <span className="text-gray-500">Issues Synced:</span>{' '}
             <span className="font-medium text-gray-900">
-              {config?.total_issues ?? 'N/A'}
+              {config?.last_sync_count ?? 'N/A'}
             </span>
           </div>
           <div>
@@ -180,6 +233,42 @@ export default function SyncConfigPanel({ projectKey }) {
           </div>
         </div>
       </div>
+
+      {/* Sync Progress */}
+      {showProgress && (
+        <div className="bg-white rounded-lg border border-gray-200 p-4">
+          <div className="flex items-center gap-2 mb-3">
+            <RotateCw className={`h-4 w-4 text-blue-500 ${syncProgress.status === 'syncing' || syncProgress.status === 'fetching' ? 'animate-spin' : ''}`} />
+            <h3 className="text-sm font-medium text-gray-700">Sync Progress</h3>
+            {syncProgress.status === 'completed' && (
+              <CheckCircle className="h-4 w-4 text-green-500" />
+            )}
+            {syncProgress.status === 'error' && (
+              <AlertCircle className="h-4 w-4 text-red-500" />
+            )}
+          </div>
+
+          {/* Progress bar */}
+          <div className="w-full bg-gray-200 rounded-full h-2.5 mb-2">
+            <div
+              className={`h-2.5 rounded-full transition-all duration-500 ${
+                syncProgress.status === 'error' ? 'bg-red-500' :
+                syncProgress.status === 'completed' ? 'bg-green-500' :
+                'bg-blue-500'
+              }`}
+              style={{ width: `${syncProgress.status === 'completed' ? 100 : progressPercent}%` }}
+            />
+          </div>
+
+          <div className="flex justify-between text-xs text-gray-500">
+            <span>{syncProgress.message}</span>
+            <span>
+              {syncProgress.synced > 0 && `${syncProgress.synced} synced`}
+              {syncProgress.current_batch > 0 && ` (batch ${syncProgress.current_batch})`}
+            </span>
+          </div>
+        </div>
+      )}
 
       {/* Sync Settings */}
       <div className="bg-white rounded-lg border border-gray-200 p-4">
