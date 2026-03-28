@@ -37,7 +37,7 @@ export default function TimelineView({ projectKey }) {
     let earliest = Infinity;
     let latest = -Infinity;
 
-    const data = entries.map((entry) => {
+    const data = entries.filter((e) => e && e.key).map((entry) => {
       const start = entry.start ? new Date(entry.start).getTime() : now;
       const end = entry.end ? new Date(entry.end).getTime() : now;
       const dueDate = entry.due_date ? new Date(entry.due_date).getTime() : null;

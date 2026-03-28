@@ -21,11 +21,11 @@ function StatsHeader({ stats }) {
   // API returns arrays of {status, count} / {issue_type, count} objects
   const byStatusRaw = stats.by_status || [];
   const byStatus = Array.isArray(byStatusRaw)
-    ? Object.fromEntries(byStatusRaw.map((s) => [s.status || s._id, s.count]))
+    ? Object.fromEntries(byStatusRaw.map((s) => [s.status || s._id || 'Unknown', s.count]))
     : byStatusRaw;
   const byTypeRaw = stats.by_type || [];
   const byType = Array.isArray(byTypeRaw)
-    ? Object.fromEntries(byTypeRaw.map((t) => [t.issue_type || t._id, t.count]))
+    ? Object.fromEntries(byTypeRaw.map((t) => [t.issue_type || t._id || 'Unknown', t.count]))
     : byTypeRaw;
   const blockers = stats.blockers || 0;
   const overdue = stats.overdue || 0;
@@ -53,7 +53,7 @@ function StatsHeader({ stats }) {
         <div className="flex flex-wrap gap-1.5 mt-2">
           {Object.entries(byStatus).map(([status, count]) => {
             let badgeClass = 'bg-slate-100 text-slate-700';
-            const lower = status.toLowerCase();
+            const lower = (status || '').toLowerCase();
             if (lower.includes('progress') || lower.includes('review')) {
               badgeClass = 'bg-blue-100 text-blue-700';
             } else if (lower === 'done' || lower.includes('closed') || lower.includes('resolved')) {
