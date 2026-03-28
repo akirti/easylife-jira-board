@@ -119,7 +119,7 @@ export default function CanvasView({ projectKey }) {
 
       {/* ReactFlow Canvas */}
       <div className="flex gap-4">
-        <div className="flex-1 h-[600px] bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+        <div className="flex-1 h-[600px] w-full bg-gray-50 rounded-lg border border-gray-200 overflow-hidden" style={{ minHeight: 600 }}>
           {rawNodes.length === 0 ? (
             <div className="flex items-center justify-center h-full text-gray-400 text-sm">
               No canvas data available. Try syncing issues first.
