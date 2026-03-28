@@ -62,7 +62,7 @@ export function useDashboardData(projectKey) {
 
       const data = await api.getIssues(params);
       if (mountedRef.current) {
-        setIssues(data.issues || []);
+        setIssues(data.items || data.issues || []);
         setTotalCount(data.total || 0);
       }
     } catch (err) {

@@ -4,9 +4,8 @@ import {
   Controls,
   MiniMap,
   Background,
-  useNodesState,
-  useEdgesState,
-  addEdge,
+  applyNodeChanges,
+  applyEdgeChanges,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import CanvasIssueNode from './CanvasIssueNode';
@@ -24,6 +23,8 @@ export default function CanvasView({ projectKey }) {
   const {
     nodes: rawNodes,
     edges: rawEdges,
+    setNodes: setRawNodes,
+    setEdges: setRawEdges,
     epicFilter,
     setEpicFilter,
     epics,
@@ -32,33 +33,32 @@ export default function CanvasView({ projectKey }) {
     refresh,
   } = useCanvasData(projectKey);
 
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [selectedIssue, setSelectedIssue] = useState(null);
 
-  // Sync hook data into ReactFlow state when it changes
-  React.useEffect(() => {
-    if (rawNodes.length > 0) {
-      setNodes(rawNodes);
-    }
-  }, [rawNodes, setNodes]);
+  // Style edges for display
+  const styledEdges = useMemo(() =>
+    rawEdges.map((edge) => {
+      const label = (edge.label || '').toLowerCase();
+      const edgeStyle = EDGE_STYLES[label] || EDGE_STYLES['relates to'] || {};
+      return {
+        ...edge,
+        style: { ...edgeStyle, ...edge.style },
+        labelStyle: { fontSize: 10, fill: '#6b7280' },
+        labelBgStyle: { fill: '#f9fafb', fillOpacity: 0.8 },
+        labelBgPadding: [4, 2],
+      };
+    }),
+  [rawEdges]);
 
-  React.useEffect(() => {
-    if (rawEdges.length >= 0) {
-      const styledEdges = rawEdges.map((edge) => {
-        const label = (edge.label || '').toLowerCase();
-        const edgeStyle = EDGE_STYLES[label] || EDGE_STYLES['relates to'] || {};
-        return {
-          ...edge,
-          style: { ...edgeStyle, ...edge.style },
-          labelStyle: { fontSize: 10, fill: '#6b7280' },
-          labelBgStyle: { fill: '#f9fafb', fillOpacity: 0.8 },
-          labelBgPadding: [4, 2],
-        };
-      });
-      setEdges(styledEdges);
-    }
-  }, [rawEdges, setEdges]);
+  // Handle node dragging by applying changes to hook state directly
+  const onNodesChange = useCallback(
+    (changes) => setRawNodes((nds) => applyNodeChanges(changes, nds)),
+    [setRawNodes],
+  );
+  const onEdgesChange = useCallback(
+    (changes) => setRawEdges((eds) => applyEdgeChanges(changes, eds)),
+    [setRawEdges],
+  );
 
   const onNodeClick = useCallback((_event, node) => {
     setSelectedIssue(node.data);
@@ -69,7 +69,7 @@ export default function CanvasView({ projectKey }) {
     return getTypeColor(issueType).hex;
   }, []);
 
-  if (loading && nodes.length === 0) {
+  if (loading && rawNodes.length === 0) {
     return (
       <div className="flex items-center justify-center h-96 text-gray-400">
         <RotateCw className="h-5 w-5 animate-spin mr-2" />
@@ -113,21 +113,21 @@ export default function CanvasView({ projectKey }) {
         </button>
 
         <span className="text-xs text-gray-400 ml-auto">
-          {nodes.length} nodes, {edges.length} edges
+          {rawNodes.length} nodes, {styledEdges.length} edges
         </span>
       </div>
 
       {/* ReactFlow Canvas */}
       <div className="flex gap-4">
         <div className="flex-1 h-[600px] bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
-          {nodes.length === 0 ? (
+          {rawNodes.length === 0 ? (
             <div className="flex items-center justify-center h-full text-gray-400 text-sm">
               No canvas data available. Try syncing issues first.
             </div>
           ) : (
             <ReactFlow
-              nodes={nodes}
-              edges={edges}
+              nodes={rawNodes}
+              edges={styledEdges}
               onNodesChange={onNodesChange}
               onEdgesChange={onEdgesChange}
               onNodeClick={onNodeClick}
