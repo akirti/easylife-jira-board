@@ -34,6 +34,11 @@ export { default as TshirtBadge } from './components/portfolio/TshirtBadge';
 export { default as ProgressBar } from './components/portfolio/ProgressBar';
 export { default as Sparkline } from './components/portfolio/Sparkline';
 
+export { default as TreeExplorer } from './components/portfolio/TreeExplorer';
+export { default as TreeDetailPanel } from './components/portfolio/TreeDetailPanel';
+export { default as TreeFilterBar } from './components/portfolio/TreeFilterBar';
+
 // Portfolio hooks
 export { usePortfolioData } from './hooks/usePortfolioData';
 export { useSnapshotData } from './hooks/useSnapshotData';
+export { useTreeData } from './hooks/useTreeData';

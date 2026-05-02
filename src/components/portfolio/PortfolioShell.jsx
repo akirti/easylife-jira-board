@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
 import { usePortfolioData } from '../../hooks/usePortfolioData';
 import RollupTable from './RollupTable';
-import { RefreshCw, Loader2, Search, ChevronLeft, ChevronRight } from 'lucide-react';
+import TreeExplorer from './TreeExplorer';
+import { RefreshCw, Loader2, Search, ChevronLeft, ChevronRight, Table2, GitBranch } from 'lucide-react';
+
+const VIEWS = [
+  { id: 'table', label: 'Table', icon: Table2 },
+  { id: 'tree', label: 'Tree', icon: GitBranch },
+];
 
 export default function PortfolioShell({ projectKey }) {
   const {
@@ -10,6 +16,7 @@ export default function PortfolioShell({ projectKey }) {
   } = usePortfolioData(projectKey);
 
   const [searchInput, setSearchInput] = useState('');
+  const [activeView, setActiveView] = useState('table');
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -63,6 +70,25 @@ export default function PortfolioShell({ projectKey }) {
         </div>
       </div>
 
+      {/* View Switcher */}
+      <div className="flex items-center gap-1 border-b border-edge">
+        {VIEWS.map(({ id, label, icon: Icon }) => (
+          <button
+            key={id}
+            onClick={() => setActiveView(id)}
+            className={`flex items-center gap-1.5 px-3 py-2 text-sm font-medium border-b-2 transition-colors ${
+              activeView === id
+                ? 'border-primary-600 text-primary-600'
+                : 'border-transparent text-content-muted hover:text-content-secondary hover:border-edge'
+            }`}
+            aria-label={`Switch to ${label} view`}
+          >
+            <Icon size={14} />
+            {label}
+          </button>
+        ))}
+      </div>
+
       {/* Error */}
       {error && (
         <div className="p-3 text-sm text-red-700 bg-red-50 border border-red-200 rounded-lg" role="alert">
@@ -70,43 +96,51 @@ export default function PortfolioShell({ projectKey }) {
         </div>
       )}
 
-      {/* Table */}
-      {loading && capabilities.length === 0 ? (
-        <div className="flex justify-center py-16">
-          <Loader2 size={24} className="animate-spin text-content-muted" />
-        </div>
-      ) : (
-        <RollupTable capabilities={capabilities} />
+      {/* Content */}
+      {activeView === 'table' && (
+        <>
+          {loading && capabilities.length === 0 ? (
+            <div className="flex justify-center py-16">
+              <Loader2 size={24} className="animate-spin text-content-muted" />
+            </div>
+          ) : (
+            <RollupTable capabilities={capabilities} />
+          )}
+
+          {/* Pagination */}
+          {total > pageSize && (
+            <div className="flex items-center justify-between text-sm text-content-secondary">
+              <span>
+                Showing {(page - 1) * pageSize + 1}&ndash;{Math.min(page * pageSize, total)} of {total}
+              </span>
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={() => setPage(page - 1)}
+                  disabled={page <= 1}
+                  className="p-1.5 rounded-lg border border-edge hover:bg-surface-hover disabled:opacity-40"
+                  aria-label="Previous page"
+                >
+                  <ChevronLeft size={16} />
+                </button>
+                <span className="px-3 py-1 text-sm tabular-nums text-content">
+                  {page}
+                </span>
+                <button
+                  onClick={() => setPage(page + 1)}
+                  disabled={!hasMore}
+                  className="p-1.5 rounded-lg border border-edge hover:bg-surface-hover disabled:opacity-40"
+                  aria-label="Next page"
+                >
+                  <ChevronRight size={16} />
+                </button>
+              </div>
+            </div>
+          )}
+        </>
       )}
 
-      {/* Pagination */}
-      {total > pageSize && (
-        <div className="flex items-center justify-between text-sm text-content-secondary">
-          <span>
-            Showing {(page - 1) * pageSize + 1}&ndash;{Math.min(page * pageSize, total)} of {total}
-          </span>
-          <div className="flex items-center gap-1">
-            <button
-              onClick={() => setPage(page - 1)}
-              disabled={page <= 1}
-              className="p-1.5 rounded-lg border border-edge hover:bg-surface-hover disabled:opacity-40"
-              aria-label="Previous page"
-            >
-              <ChevronLeft size={16} />
-            </button>
-            <span className="px-3 py-1 text-sm tabular-nums text-content">
-              {page}
-            </span>
-            <button
-              onClick={() => setPage(page + 1)}
-              disabled={!hasMore}
-              className="p-1.5 rounded-lg border border-edge hover:bg-surface-hover disabled:opacity-40"
-              aria-label="Next page"
-            >
-              <ChevronRight size={16} />
-            </button>
-          </div>
-        </div>
+      {activeView === 'tree' && (
+        <TreeExplorer projectKey={projectKey} />
       )}
     </div>
   );
