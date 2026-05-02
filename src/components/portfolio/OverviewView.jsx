@@ -26,7 +26,13 @@ function CapCard({ cap, onExploreTree, onOpenTable }) {
   const pct = cum > 0 ? Math.round((done / cum) * 100) : 0;
 
   return (
-    <div className="bg-surface rounded-lg border border-edge p-4 hover:shadow-md transition-shadow">
+    <div className="bg-surface rounded-lg border border-edge p-4 hover:shadow-md transition-shadow relative">
+      {cap.mention_count > 0 && (
+        <span className="absolute top-3 right-3 inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-semibold bg-primary-100 text-primary-700"
+              title={`${cap.mention_count} mentions of you`}>
+          @{cap.mention_count}
+        </span>
+      )}
       <div className="flex items-start justify-between mb-2">
         <div className="flex items-center gap-2">
           <span className="font-mono text-xs text-primary-600">{cap.key}</span>
@@ -82,6 +88,9 @@ export default function OverviewView({ projectKey, onNavigate }) {
   const totalEpics = capabilities.reduce(
     (sum, c) => sum + (c.rollups?.direct_child_count || 0), 0
   );
+  const totalMentions = capabilities.reduce(
+    (sum, c) => sum + (c.mention_count || 0), 0
+  );
 
   if (loading && capabilities.length === 0) {
     return (
@@ -112,6 +121,11 @@ export default function OverviewView({ projectKey, onNavigate }) {
         <KpiCard icon={Hash} label="Cumulative Pts" value={totalCumulative} />
         <KpiCard icon={TrendingDown} label="Remaining Pts" value={totalRemaining} accent />
       </div>
+      {totalMentions > 0 && (
+        <div className="col-span-2 md:col-span-4 text-xs text-primary-600">
+          @ {totalMentions} mentions across your portfolio
+        </div>
+      )}
 
       {/* Capability Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
