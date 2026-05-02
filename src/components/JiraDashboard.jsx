@@ -6,6 +6,7 @@ import TimelineView from './TimelineView';
 import MyMentionsView from './MyMentionsView';
 import BoardsView from './BoardsView';
 import SyncConfigPanel from './SyncConfigPanel';
+import PortfolioShell from './portfolio/PortfolioShell';
 import CreateCardModal from './CreateCardModal';
 import {
   LayoutDashboard,
@@ -14,6 +15,7 @@ import {
   MessageCircle,
   LayoutGrid,
   Settings,
+  Layers,
   Plus,
   RotateCw,
 } from 'lucide-react';
@@ -56,6 +58,7 @@ const TABS = [
   { key: 'mentions', label: 'My Tags', icon: MessageCircle },
   { key: 'boards', label: 'Boards', icon: LayoutGrid },
   { key: 'config', label: 'Config', icon: Settings },
+  { key: 'portfolio', label: 'Portfolio', icon: Layers },
 ];
 
 /**
@@ -145,6 +148,8 @@ function JiraDashboardInner() {
         return <BoardsView />;
       case 'config':
         return <SyncConfigPanel projectKey={projectKey} />;
+      case 'portfolio':
+        return <PortfolioShell projectKey={projectKey} />;
       default:
         return null;
     }

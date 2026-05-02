@@ -26,3 +26,14 @@ export { createJiraApiClient } from './api';
 
 // Constants
 export { TYPE_COLORS, STATUS_CATEGORIES, PRIORITY_ICONS, EDGE_STYLES, getTypeColor, getStatusColor } from './constants';
+
+// Portfolio components
+export { default as PortfolioShell } from './components/portfolio/PortfolioShell';
+export { default as RollupTable } from './components/portfolio/RollupTable';
+export { default as TshirtBadge } from './components/portfolio/TshirtBadge';
+export { default as ProgressBar } from './components/portfolio/ProgressBar';
+export { default as Sparkline } from './components/portfolio/Sparkline';
+
+// Portfolio hooks
+export { usePortfolioData } from './hooks/usePortfolioData';
+export { useSnapshotData } from './hooks/useSnapshotData';
