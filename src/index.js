@@ -34,6 +34,7 @@ export { default as TshirtBadge } from './components/portfolio/TshirtBadge';
 export { default as ProgressBar } from './components/portfolio/ProgressBar';
 export { default as Sparkline } from './components/portfolio/Sparkline';
 
+export { default as OverviewView } from './components/portfolio/OverviewView';
 export { default as TreeExplorer } from './components/portfolio/TreeExplorer';
 export { default as TreeDetailPanel } from './components/portfolio/TreeDetailPanel';
 export { default as TreeFilterBar } from './components/portfolio/TreeFilterBar';
