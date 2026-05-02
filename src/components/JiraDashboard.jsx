@@ -131,7 +131,7 @@ function JiraDashboardInner() {
             <select
               value={projectKey}
               onChange={(e) => setProjectKey(e.target.value)}
-              className="rounded-md border border-edge px-3 py-1.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="rounded-md border border-edge bg-surface-input text-content px-3 py-1.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary-500"
             >
               {projects.map((p) => {
                 const key = typeof p === 'string' ? p : p.project_key;

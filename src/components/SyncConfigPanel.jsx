@@ -287,7 +287,7 @@ export default function SyncConfigPanel({ projectKey }) {
               id="sync-period"
               value={syncPeriod}
               onChange={(e) => setSyncPeriod(Number(e.target.value))}
-              className="rounded-md border border-edge px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="rounded-md border border-edge bg-surface-input text-content px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
             >
               {SYNC_PERIODS.map((p) => (
                 <option key={p.value} value={p.value}>{p.label}</option>
@@ -305,7 +305,7 @@ export default function SyncConfigPanel({ projectKey }) {
               id="archive-threshold"
               value={archiveThreshold}
               onChange={(e) => setArchiveThreshold(Number(e.target.value))}
-              className="rounded-md border border-edge px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="rounded-md border border-edge bg-surface-input text-content px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
             >
               {ARCHIVE_THRESHOLDS.map((p) => (
                 <option key={p.value} value={p.value}>{p.label}</option>
@@ -326,7 +326,7 @@ export default function SyncConfigPanel({ projectKey }) {
               rows={8}
               spellCheck={false}
               className={`w-full rounded-md border px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-primary-500 resize-y ${
-                jsonError ? 'border-red-300 bg-red-50' : 'border-edge'
+                jsonError ? 'border-red-300 bg-red-50' : 'border-edge bg-surface-input text-content'
               }`}
             />
             {jsonError && (

@@ -41,7 +41,7 @@ export default function BoardView({ projectKey }) {
           <select
             value={filters.status}
             onChange={(e) => updateFilters({ status: e.target.value })}
-            className="rounded-md border border-edge px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+            className="rounded-md border border-edge bg-surface-input text-content px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
           >
             <option value="">All Statuses</option>
             {STATUS_OPTIONS.map((s) => (
@@ -52,7 +52,7 @@ export default function BoardView({ projectKey }) {
           <select
             value={filters.issue_type}
             onChange={(e) => updateFilters({ issue_type: e.target.value })}
-            className="rounded-md border border-edge px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+            className="rounded-md border border-edge bg-surface-input text-content px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
           >
             <option value="">All Types</option>
             {ISSUE_TYPES.map((t) => (
@@ -65,7 +65,7 @@ export default function BoardView({ projectKey }) {
             placeholder="Assignee..."
             value={filters.assignee}
             onChange={(e) => updateFilters({ assignee: e.target.value })}
-            className="rounded-md border border-edge px-3 py-1.5 text-sm w-36 focus:outline-none focus:ring-2 focus:ring-primary-500"
+            className="rounded-md border border-edge bg-surface-input text-content px-3 py-1.5 text-sm w-36 focus:outline-none focus:ring-2 focus:ring-primary-500"
           />
 
           <label className="flex items-center gap-1.5 text-sm text-content-secondary cursor-pointer">

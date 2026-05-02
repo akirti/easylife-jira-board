@@ -43,8 +43,8 @@ export default function CanvasView({ projectKey }) {
       return {
         ...edge,
         style: { ...edgeStyle, ...edge.style },
-        labelStyle: { fontSize: 10, fill: '#6b7280' },
-        labelBgStyle: { fill: '#f9fafb', fillOpacity: 0.8 },
+        labelStyle: { fontSize: 10, fill: 'var(--color-text-muted)' },
+        labelBgStyle: { fill: 'var(--color-surface-secondary)', fillOpacity: 0.8 },
         labelBgPadding: [4, 2],
       };
     }),
@@ -93,7 +93,7 @@ export default function CanvasView({ projectKey }) {
         <select
           value={epicFilter}
           onChange={(e) => setEpicFilter(e.target.value)}
-          className="rounded-md border border-edge px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+          className="rounded-md border border-edge bg-surface-input text-content px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
         >
           <option value="">All Epics</option>
           {epics.map((epic) => (
@@ -146,7 +146,7 @@ export default function CanvasView({ projectKey }) {
                 pannable
                 style={{ height: 100, width: 150 }}
               />
-              <Background variant="dots" gap={16} size={1} color="#e5e7eb" />
+              <Background variant="dots" gap={16} size={1} color="var(--color-border)" />
             </ReactFlow>
           )}
         </div>

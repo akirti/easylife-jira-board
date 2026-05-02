@@ -133,7 +133,7 @@ export default function TimelineView({ projectKey }) {
           <select
             value={filters.issue_type}
             onChange={(e) => updateFilters({ issue_type: e.target.value })}
-            className="rounded-md border border-edge px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+            className="rounded-md border border-edge bg-surface-input text-content px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
           >
             <option value="">All Types</option>
             {ISSUE_TYPES.map((t) => (
@@ -146,7 +146,7 @@ export default function TimelineView({ projectKey }) {
             placeholder="Assignee..."
             value={filters.assignee}
             onChange={(e) => updateFilters({ assignee: e.target.value })}
-            className="rounded-md border border-edge px-3 py-1.5 text-sm w-36 focus:outline-none focus:ring-2 focus:ring-primary-500"
+            className="rounded-md border border-edge bg-surface-input text-content px-3 py-1.5 text-sm w-36 focus:outline-none focus:ring-2 focus:ring-primary-500"
           />
 
           <button
@@ -191,7 +191,7 @@ export default function TimelineView({ projectKey }) {
                 dataKey="key"
                 width={110}
                 fontSize={11}
-                tick={{ fill: '#374151' }}
+                tick={{ fill: 'var(--color-text-secondary)' }}
               />
               <Tooltip content={<CustomTooltip />} />
               <Bar dataKey="duration" minPointSize={4} radius={[3, 3, 3, 3]}>
