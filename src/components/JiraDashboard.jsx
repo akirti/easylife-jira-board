@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, Component } from 'react';
 import { JiraApiProvider, useJiraApi } from '../hooks/useJiraApi';
 import BoardView from './BoardView';
 import CanvasView from './CanvasView';
@@ -17,6 +17,37 @@ import {
   Plus,
   RotateCw,
 } from 'lucide-react';
+
+/** Error boundary to prevent one tab crash from taking down the whole dashboard. */
+class TabErrorBoundary extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+  componentDidCatch(error, info) {
+    console.error('Tab crash:', error, info);
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+          <p className="text-sm font-medium text-red-700 mb-2">This view encountered an error</p>
+          <p className="text-xs text-red-500 mb-3">{this.state.error?.message || 'Unknown error'}</p>
+          <button
+            onClick={() => this.setState({ hasError: false, error: null })}
+            className="px-3 py-1.5 text-sm font-medium text-red-700 bg-red-100 rounded-lg hover:bg-red-200"
+          >
+            Try Again
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 const TABS = [
   { key: 'board', label: 'Board', icon: LayoutDashboard },
@@ -213,7 +244,9 @@ function JiraDashboardInner() {
       {/* Tab Content */}
       <div className="min-h-[400px]">
         {projectKey ? (
-          renderTabContent()
+          <TabErrorBoundary key={activeTab}>
+            {renderTabContent()}
+          </TabErrorBoundary>
         ) : (
           <div className="flex items-center justify-center h-64 text-content-muted">
             Select a project to get started
