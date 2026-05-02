@@ -9,9 +9,9 @@ function StatsHeader({ stats }) {
     return (
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
         {[1, 2, 3, 4].map((i) => (
-          <div key={i} className="bg-white rounded-lg border border-gray-200 p-4 animate-pulse">
-            <div className="h-4 bg-gray-200 rounded w-20 mb-2" />
-            <div className="h-8 bg-gray-200 rounded w-12" />
+          <div key={i} className="bg-surface rounded-lg border border-edge p-4 animate-pulse">
+            <div className="h-4 bg-surface-secondary rounded w-20 mb-2" />
+            <div className="h-8 bg-surface-secondary rounded w-12" />
           </div>
         ))}
       </div>
@@ -33,13 +33,13 @@ function StatsHeader({ stats }) {
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
       {/* Total Issues */}
-      <div className="bg-white rounded-lg border border-gray-200 p-4">
-        <p className="text-sm font-medium text-gray-500">Total Issues</p>
-        <p className="text-2xl font-bold text-gray-900 mt-1">{stats.total || 0}</p>
+      <div className="bg-surface rounded-lg border border-edge p-4">
+        <p className="text-sm font-medium text-content-muted">Total Issues</p>
+        <p className="text-2xl font-bold text-content mt-1">{stats.total || 0}</p>
         {Object.keys(byType).length > 0 && (
           <div className="flex flex-wrap gap-1 mt-2">
             {Object.entries(byType).slice(0, 4).map(([type, count]) => (
-              <span key={type} className="text-xs text-gray-500">
+              <span key={type} className="text-xs text-content-muted">
                 {type}: {count}
               </span>
             ))}
@@ -48,8 +48,8 @@ function StatsHeader({ stats }) {
       </div>
 
       {/* By Status */}
-      <div className="bg-white rounded-lg border border-gray-200 p-4">
-        <p className="text-sm font-medium text-gray-500">By Status</p>
+      <div className="bg-surface rounded-lg border border-edge p-4">
+        <p className="text-sm font-medium text-content-muted">By Status</p>
         <div className="flex flex-wrap gap-1.5 mt-2">
           {Object.entries(byStatus).map(([status, count]) => {
             let badgeClass = 'bg-slate-100 text-slate-700';
@@ -69,9 +69,9 @@ function StatsHeader({ stats }) {
       </div>
 
       {/* Blockers */}
-      <div className={`rounded-lg border p-4 ${blockers > 0 ? 'bg-red-50 border-red-200' : 'bg-white border-gray-200'}`}>
-        <p className="text-sm font-medium text-gray-500">Blockers</p>
-        <p className={`text-2xl font-bold mt-1 ${blockers > 0 ? 'text-red-600' : 'text-gray-900'}`}>
+      <div className={`rounded-lg border p-4 ${blockers > 0 ? 'bg-red-50 border-red-200' : 'bg-surface border-edge'}`}>
+        <p className="text-sm font-medium text-content-muted">Blockers</p>
+        <p className={`text-2xl font-bold mt-1 ${blockers > 0 ? 'text-red-600' : 'text-content'}`}>
           {blockers}
         </p>
         {blockers > 0 && (
@@ -80,9 +80,9 @@ function StatsHeader({ stats }) {
       </div>
 
       {/* Overdue */}
-      <div className={`rounded-lg border p-4 ${overdue > 0 ? 'bg-amber-50 border-amber-200' : 'bg-white border-gray-200'}`}>
-        <p className="text-sm font-medium text-gray-500">Overdue</p>
-        <p className={`text-2xl font-bold mt-1 ${overdue > 0 ? 'text-amber-600' : 'text-gray-900'}`}>
+      <div className={`rounded-lg border p-4 ${overdue > 0 ? 'bg-amber-50 border-amber-200' : 'bg-surface border-edge'}`}>
+        <p className="text-sm font-medium text-content-muted">Overdue</p>
+        <p className={`text-2xl font-bold mt-1 ${overdue > 0 ? 'text-amber-600' : 'text-content'}`}>
           {overdue}
         </p>
         {overdue > 0 && (

@@ -186,7 +186,7 @@ export default function SyncConfigPanel({ projectKey }) {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-48 text-gray-400">
+      <div className="flex items-center justify-center h-48 text-content-muted">
         <RotateCw className="h-5 w-5 animate-spin mr-2" />
         Loading configuration...
       </div>
@@ -201,45 +201,45 @@ export default function SyncConfigPanel({ projectKey }) {
   return (
     <div className="space-y-6 max-w-2xl">
       {/* Last Sync Info */}
-      <div className="bg-white rounded-lg border border-gray-200 p-4">
+      <div className="bg-surface rounded-lg border border-edge p-4">
         <div className="flex items-center gap-2 mb-3">
-          <Clock className="h-4 w-4 text-gray-400" />
-          <h3 className="text-sm font-medium text-gray-700">Sync Status</h3>
+          <Clock className="h-4 w-4 text-content-muted" />
+          <h3 className="text-sm font-medium text-content-secondary">Sync Status</h3>
         </div>
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div>
-            <span className="text-gray-500">Last Sync:</span>{' '}
-            <span className="font-medium text-gray-900">
+            <span className="text-content-muted">Last Sync:</span>{' '}
+            <span className="font-medium text-content">
               {config?.last_sync
                 ? new Date(config.last_sync).toLocaleString()
                 : 'Never'}
             </span>
           </div>
           <div>
-            <span className="text-gray-500">Last Result:</span>{' '}
+            <span className="text-content-muted">Last Result:</span>{' '}
             <span className={`font-medium ${config?.last_sync_status === 'error' ? 'text-red-600' : 'text-green-600'}`}>
               {config?.last_sync_status || 'N/A'}
             </span>
           </div>
           <div>
-            <span className="text-gray-500">Issues Synced:</span>{' '}
-            <span className="font-medium text-gray-900">
+            <span className="text-content-muted">Issues Synced:</span>{' '}
+            <span className="font-medium text-content">
               {config?.last_sync_count ?? 'N/A'}
             </span>
           </div>
           <div>
-            <span className="text-gray-500">Project:</span>{' '}
-            <span className="font-mono font-medium text-gray-900">{projectKey}</span>
+            <span className="text-content-muted">Project:</span>{' '}
+            <span className="font-mono font-medium text-content">{projectKey}</span>
           </div>
         </div>
       </div>
 
       {/* Sync Progress */}
       {showProgress && (
-        <div className="bg-white rounded-lg border border-gray-200 p-4">
+        <div className="bg-surface rounded-lg border border-edge p-4">
           <div className="flex items-center gap-2 mb-3">
-            <RotateCw className={`h-4 w-4 text-blue-500 ${syncProgress.status === 'syncing' || syncProgress.status === 'fetching' ? 'animate-spin' : ''}`} />
-            <h3 className="text-sm font-medium text-gray-700">Sync Progress</h3>
+            <RotateCw className={`h-4 w-4 text-primary-500 ${syncProgress.status === 'syncing' || syncProgress.status === 'fetching' ? 'animate-spin' : ''}`} />
+            <h3 className="text-sm font-medium text-content-secondary">Sync Progress</h3>
             {syncProgress.status === 'completed' && (
               <CheckCircle className="h-4 w-4 text-green-500" />
             )}
@@ -249,18 +249,18 @@ export default function SyncConfigPanel({ projectKey }) {
           </div>
 
           {/* Progress bar */}
-          <div className="w-full bg-gray-200 rounded-full h-2.5 mb-2">
+          <div className="w-full bg-surface-secondary rounded-full h-2.5 mb-2">
             <div
               className={`h-2.5 rounded-full transition-all duration-500 ${
                 syncProgress.status === 'error' ? 'bg-red-500' :
                 syncProgress.status === 'completed' ? 'bg-green-500' :
-                'bg-blue-500'
+                'bg-primary-500'
               }`}
               style={{ width: `${syncProgress.status === 'completed' ? 100 : progressPercent}%` }}
             />
           </div>
 
-          <div className="flex justify-between text-xs text-gray-500">
+          <div className="flex justify-between text-xs text-content-muted">
             <span>{syncProgress.message}</span>
             <span>
               {syncProgress.synced > 0 && `${syncProgress.synced} synced`}
@@ -271,52 +271,52 @@ export default function SyncConfigPanel({ projectKey }) {
       )}
 
       {/* Sync Settings */}
-      <div className="bg-white rounded-lg border border-gray-200 p-4">
+      <div className="bg-surface rounded-lg border border-edge p-4">
         <div className="flex items-center gap-2 mb-4">
-          <Settings className="h-4 w-4 text-gray-400" />
-          <h3 className="text-sm font-medium text-gray-700">Settings</h3>
+          <Settings className="h-4 w-4 text-content-muted" />
+          <h3 className="text-sm font-medium text-content-secondary">Settings</h3>
         </div>
 
         <div className="space-y-4">
           {/* Sync Period */}
           <div>
-            <label htmlFor="sync-period" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="sync-period" className="block text-sm font-medium text-content-secondary mb-1">
               Sync Period
             </label>
             <select
               id="sync-period"
               value={syncPeriod}
               onChange={(e) => setSyncPeriod(Number(e.target.value))}
-              className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="rounded-md border border-edge px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
             >
               {SYNC_PERIODS.map((p) => (
                 <option key={p.value} value={p.value}>{p.label}</option>
               ))}
             </select>
-            <p className="text-xs text-gray-400 mt-1">How far back to sync issues from Jira</p>
+            <p className="text-xs text-content-muted mt-1">How far back to sync issues from Jira</p>
           </div>
 
           {/* Archive Threshold */}
           <div>
-            <label htmlFor="archive-threshold" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="archive-threshold" className="block text-sm font-medium text-content-secondary mb-1">
               Archive Threshold
             </label>
             <select
               id="archive-threshold"
               value={archiveThreshold}
               onChange={(e) => setArchiveThreshold(Number(e.target.value))}
-              className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="rounded-md border border-edge px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
             >
               {ARCHIVE_THRESHOLDS.map((p) => (
                 <option key={p.value} value={p.value}>{p.label}</option>
               ))}
             </select>
-            <p className="text-xs text-gray-400 mt-1">Issues older than this are archived to GCS</p>
+            <p className="text-xs text-content-muted mt-1">Issues older than this are archived to GCS</p>
           </div>
 
           {/* Attribute Mapping */}
           <div>
-            <label htmlFor="attribute-map" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="attribute-map" className="block text-sm font-medium text-content-secondary mb-1">
               Attribute Mapping
             </label>
             <textarea
@@ -325,25 +325,25 @@ export default function SyncConfigPanel({ projectKey }) {
               onChange={(e) => handleAttributeMapChange(e.target.value)}
               rows={8}
               spellCheck={false}
-              className={`w-full rounded-md border px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y ${
-                jsonError ? 'border-red-300 bg-red-50' : 'border-gray-300'
+              className={`w-full rounded-md border px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-primary-500 resize-y ${
+                jsonError ? 'border-red-300 bg-red-50' : 'border-edge'
               }`}
             />
             {jsonError && (
               <p className="text-xs text-red-500 mt-1">{jsonError}</p>
             )}
-            <p className="text-xs text-gray-400 mt-1">
+            <p className="text-xs text-content-muted mt-1">
               Maps Jira custom field IDs to local field names. Format: {`{ "customfield_xxxxx": "our_field_name" }`}
             </p>
           </div>
         </div>
 
         {/* Save button */}
-        <div className="mt-4 pt-4 border-t border-gray-100">
+        <div className="mt-4 pt-4 border-t border-edge">
           <button
             onClick={handleSave}
             disabled={saving || !!jsonError}
-            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {saving ? <RotateCw className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
             {saving ? 'Saving...' : 'Save Configuration'}
@@ -352,8 +352,8 @@ export default function SyncConfigPanel({ projectKey }) {
       </div>
 
       {/* Actions */}
-      <div className="bg-white rounded-lg border border-gray-200 p-4">
-        <h3 className="text-sm font-medium text-gray-700 mb-4">Actions</h3>
+      <div className="bg-surface rounded-lg border border-edge p-4">
+        <h3 className="text-sm font-medium text-content-secondary mb-4">Actions</h3>
         <div className="flex flex-wrap gap-3">
           <button
             onClick={handleSync}

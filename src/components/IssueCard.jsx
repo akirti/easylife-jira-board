@@ -16,8 +16,8 @@ function IssueCard({ issue, compact = false, onClick }) {
   return (
     <div
       className={`
-        rounded-lg border bg-white shadow-sm transition-shadow hover:shadow-md
-        ${isFlagged ? 'border-l-4 border-l-red-500' : 'border-gray-200'}
+        rounded-lg border bg-surface shadow-sm transition-shadow hover:shadow-md
+        ${isFlagged ? 'border-l-4 border-l-red-500' : 'border-edge'}
         ${onClick ? 'cursor-pointer' : ''}
         ${compact ? 'p-2' : 'p-3'}
       `}
@@ -37,7 +37,7 @@ function IssueCard({ issue, compact = false, onClick }) {
           href={issue.url || '#'}
           target="_blank"
           rel="noopener noreferrer"
-          className="font-mono text-xs text-blue-600 hover:underline"
+          className="font-mono text-xs text-primary-600 hover:underline"
           onClick={(e) => e.stopPropagation()}
         >
           {issue.key}
@@ -53,7 +53,7 @@ function IssueCard({ issue, compact = false, onClick }) {
       </div>
 
       {/* Summary */}
-      <p className={`text-sm text-gray-900 font-medium ${compact ? 'line-clamp-1' : 'line-clamp-2'} mb-2`}>
+      <p className={`text-sm text-content font-medium ${compact ? 'line-clamp-1' : 'line-clamp-2'} mb-2`}>
         {issue.summary}
       </p>
 
@@ -69,7 +69,7 @@ function IssueCard({ issue, compact = false, onClick }) {
 
       {/* Footer: assignee, days in status, sprint */}
       {!compact && (
-        <div className="flex items-center justify-between text-xs text-gray-500 mt-1">
+        <div className="flex items-center justify-between text-xs text-content-muted mt-1">
           <span className="truncate max-w-[120px]" title={issue.assignee || 'Unassigned'}>
             {issue.assignee || 'Unassigned'}
           </span>
@@ -80,7 +80,7 @@ function IssueCard({ issue, compact = false, onClick }) {
               </span>
             )}
             <span
-              className={`font-medium ${isStale ? 'text-red-600' : 'text-gray-500'}`}
+              className={`font-medium ${isStale ? 'text-red-600' : 'text-content-muted'}`}
               title={`${daysInStatus} days in current status`}
             >
               {daysInStatus}d

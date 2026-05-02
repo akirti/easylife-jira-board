@@ -124,14 +124,14 @@ function JiraDashboardInner() {
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <h1 className="text-xl font-bold text-gray-900">Jira Dashboard</h1>
+          <h1 className="text-xl font-bold text-content">Jira Dashboard</h1>
 
           {/* Project selector */}
           {projects.length > 1 ? (
             <select
               value={projectKey}
               onChange={(e) => setProjectKey(e.target.value)}
-              className="rounded-md border border-gray-300 px-3 py-1.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="rounded-md border border-edge px-3 py-1.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary-500"
             >
               {projects.map((p) => {
                 const key = typeof p === 'string' ? p : p.project_key;
@@ -143,7 +143,7 @@ function JiraDashboardInner() {
             </select>
           ) : (
             projectKey && (
-              <span className="text-sm font-mono text-gray-500 bg-gray-100 px-2 py-1 rounded">
+              <span className="text-sm font-mono text-content-muted bg-surface-secondary px-2 py-1 rounded">
                 {projectKey}
               </span>
             )
@@ -166,7 +166,7 @@ function JiraDashboardInner() {
           <button
             onClick={handleSync}
             disabled={syncing || !projectKey}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-content-secondary bg-surface border border-edge rounded-lg hover:bg-surface-hover disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <RotateCw className={`h-4 w-4 ${syncing ? 'animate-spin' : ''}`} />
             Sync
@@ -176,7 +176,7 @@ function JiraDashboardInner() {
           <button
             onClick={() => setShowCreateModal(true)}
             disabled={!projectKey}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Plus className="h-4 w-4" />
             New Issue
@@ -185,7 +185,7 @@ function JiraDashboardInner() {
       </div>
 
       {/* Tabs */}
-      <div className="border-b border-gray-200">
+      <div className="border-b border-edge">
         <nav className="flex gap-0 -mb-px" role="tablist">
           {TABS.map((tab) => {
             const Icon = tab.icon;
@@ -198,8 +198,8 @@ function JiraDashboardInner() {
                 onClick={() => setActiveTab(tab.key)}
                 className={`flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
                   isActive
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    ? 'border-primary-500 text-primary-600'
+                    : 'border-transparent text-content-muted hover:text-content-secondary hover:border-edge'
                 }`}
               >
                 <Icon className="h-4 w-4" />
@@ -215,7 +215,7 @@ function JiraDashboardInner() {
         {projectKey ? (
           renderTabContent()
         ) : (
-          <div className="flex items-center justify-center h-64 text-gray-400">
+          <div className="flex items-center justify-center h-64 text-content-muted">
             Select a project to get started
           </div>
         )}

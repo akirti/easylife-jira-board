@@ -96,13 +96,13 @@ export default function CreateCardModal({ projectKey, isOpen, onClose, onCreated
       />
 
       {/* Modal */}
-      <div className="relative bg-white rounded-xl shadow-xl w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto">
+      <div className="relative bg-surface rounded-xl shadow-xl w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
-          <h2 className="text-lg font-semibold text-gray-900">Create New Issue</h2>
+        <div className="flex items-center justify-between px-6 py-4 border-b border-edge">
+          <h2 className="text-lg font-semibold text-content">Create New Issue</h2>
           <button
             onClick={handleClose}
-            className="text-gray-400 hover:text-gray-600 p-1 rounded-lg hover:bg-gray-100"
+            className="text-content-muted hover:text-content-secondary p-1 rounded-lg hover:bg-surface-hover"
           >
             <X className="h-5 w-5" />
           </button>
@@ -112,7 +112,7 @@ export default function CreateCardModal({ projectKey, isOpen, onClose, onCreated
         <form onSubmit={handleSubmit} className="px-6 py-4 space-y-4">
           {/* Summary */}
           <div>
-            <label htmlFor="create-summary" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="create-summary" className="block text-sm font-medium text-content-secondary mb-1">
               Summary <span className="text-red-500">*</span>
             </label>
             <input
@@ -121,7 +121,7 @@ export default function CreateCardModal({ projectKey, isOpen, onClose, onCreated
               value={formData.summary}
               onChange={(e) => updateField('summary', e.target.value)}
               placeholder="Brief description of the issue"
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full rounded-md border border-edge px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               autoFocus
               required
             />
@@ -129,7 +129,7 @@ export default function CreateCardModal({ projectKey, isOpen, onClose, onCreated
 
           {/* Description */}
           <div>
-            <label htmlFor="create-description" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="create-description" className="block text-sm font-medium text-content-secondary mb-1">
               Description
             </label>
             <textarea
@@ -138,21 +138,21 @@ export default function CreateCardModal({ projectKey, isOpen, onClose, onCreated
               onChange={(e) => updateField('description', e.target.value)}
               placeholder="Detailed description (optional)"
               rows={4}
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-y"
+              className="w-full rounded-md border border-edge px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-y"
             />
           </div>
 
           {/* Type + Priority row */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label htmlFor="create-type" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="create-type" className="block text-sm font-medium text-content-secondary mb-1">
                 Issue Type
               </label>
               <select
                 id="create-type"
                 value={formData.issue_type}
                 onChange={(e) => updateField('issue_type', e.target.value)}
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-md border border-edge px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
               >
                 {ISSUE_TYPES.map((t) => (
                   <option key={t} value={t}>{t}</option>
@@ -160,14 +160,14 @@ export default function CreateCardModal({ projectKey, isOpen, onClose, onCreated
               </select>
             </div>
             <div>
-              <label htmlFor="create-priority" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="create-priority" className="block text-sm font-medium text-content-secondary mb-1">
                 Priority
               </label>
               <select
                 id="create-priority"
                 value={formData.priority}
                 onChange={(e) => updateField('priority', e.target.value)}
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-md border border-edge px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
               >
                 {PRIORITIES.map((p) => (
                   <option key={p} value={p}>{p}</option>
@@ -178,7 +178,7 @@ export default function CreateCardModal({ projectKey, isOpen, onClose, onCreated
 
           {/* Assignee */}
           <div>
-            <label htmlFor="create-assignee" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="create-assignee" className="block text-sm font-medium text-content-secondary mb-1">
               Assignee
             </label>
             <input
@@ -187,13 +187,13 @@ export default function CreateCardModal({ projectKey, isOpen, onClose, onCreated
               value={formData.assignee}
               onChange={(e) => updateField('assignee', e.target.value)}
               placeholder="Email or display name"
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full rounded-md border border-edge px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             />
           </div>
 
           {/* Parent/Epic */}
           <div>
-            <label htmlFor="create-parent" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="create-parent" className="block text-sm font-medium text-content-secondary mb-1">
               Parent / Epic Key
             </label>
             <input
@@ -202,13 +202,13 @@ export default function CreateCardModal({ projectKey, isOpen, onClose, onCreated
               value={formData.parent_key}
               onChange={(e) => updateField('parent_key', e.target.value)}
               placeholder="e.g. SCEN-123"
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full rounded-md border border-edge px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             />
           </div>
 
           {/* Related Issues */}
           <div>
-            <label htmlFor="create-related" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="create-related" className="block text-sm font-medium text-content-secondary mb-1">
               Related Issues
             </label>
             <input
@@ -217,9 +217,9 @@ export default function CreateCardModal({ projectKey, isOpen, onClose, onCreated
               value={formData.related_keys}
               onChange={(e) => updateField('related_keys', e.target.value)}
               placeholder="Comma-separated keys, e.g. SCEN-100, SCEN-101"
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full rounded-md border border-edge px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             />
-            <p className="text-xs text-gray-400 mt-1">These will be linked as &quot;relates to&quot;</p>
+            <p className="text-xs text-content-muted mt-1">These will be linked as &quot;relates to&quot;</p>
           </div>
 
           {/* Feedback */}
@@ -245,14 +245,14 @@ export default function CreateCardModal({ projectKey, isOpen, onClose, onCreated
             <button
               type="button"
               onClick={handleClose}
-              className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+              className="px-4 py-2 text-sm font-medium text-content-secondary bg-surface border border-edge rounded-lg hover:bg-surface-hover"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={submitting || !formData.summary.trim()}
-              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              className="px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
             >
               {submitting && <Loader2 className="h-4 w-4 animate-spin" />}
               {submitting ? 'Creating...' : 'Create Issue'}

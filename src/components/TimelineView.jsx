@@ -79,10 +79,10 @@ export default function TimelineView({ projectKey }) {
     if (!item) return null;
 
     return (
-      <div className="bg-white border border-gray-200 rounded-lg shadow-lg p-3 max-w-xs">
-        <p className="font-mono text-xs text-blue-600 font-medium">{item.key}</p>
-        <p className="text-sm text-gray-900 mt-1">{item.fullSummary}</p>
-        <div className="grid grid-cols-2 gap-x-3 gap-y-1 mt-2 text-xs text-gray-600">
+      <div className="bg-surface border border-edge rounded-lg shadow-lg p-3 max-w-xs">
+        <p className="font-mono text-xs text-primary-600 font-medium">{item.key}</p>
+        <p className="text-sm text-content mt-1">{item.fullSummary}</p>
+        <div className="grid grid-cols-2 gap-x-3 gap-y-1 mt-2 text-xs text-content-secondary">
           <span>Type: <strong>{item.issue_type}</strong></span>
           <span>Status: <strong>{item.status}</strong></span>
           <span>Assignee: <strong>{item.assignee}</strong></span>
@@ -102,7 +102,7 @@ export default function TimelineView({ projectKey }) {
 
   if (loading && entries.length === 0) {
     return (
-      <div className="flex items-center justify-center h-96 text-gray-400">
+      <div className="flex items-center justify-center h-96 text-content-muted">
         <RotateCw className="h-5 w-5 animate-spin mr-2" />
         Loading timeline...
       </div>
@@ -120,14 +120,14 @@ export default function TimelineView({ projectKey }) {
   return (
     <div className="space-y-4">
       {/* Filters */}
-      <div className="bg-white rounded-lg border border-gray-200 p-4">
+      <div className="bg-surface rounded-lg border border-edge p-4">
         <div className="flex flex-wrap items-center gap-3">
-          <Filter className="h-4 w-4 text-gray-400" />
+          <Filter className="h-4 w-4 text-content-muted" />
 
           <select
             value={filters.issue_type}
             onChange={(e) => updateFilters({ issue_type: e.target.value })}
-            className="rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="rounded-md border border-edge px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
           >
             <option value="">All Types</option>
             {ISSUE_TYPES.map((t) => (
@@ -140,19 +140,19 @@ export default function TimelineView({ projectKey }) {
             placeholder="Assignee..."
             value={filters.assignee}
             onChange={(e) => updateFilters({ assignee: e.target.value })}
-            className="rounded-md border border-gray-300 px-3 py-1.5 text-sm w-36 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="rounded-md border border-edge px-3 py-1.5 text-sm w-36 focus:outline-none focus:ring-2 focus:ring-primary-500"
           />
 
           <button
             onClick={refresh}
             disabled={loading}
-            className="ml-auto flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700 disabled:opacity-50"
+            className="ml-auto flex items-center gap-1 text-sm text-primary-600 hover:text-primary-700 disabled:opacity-50"
           >
             <RotateCw className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`} />
             Refresh
           </button>
 
-          <span className="text-xs text-gray-400">
+          <span className="text-xs text-content-muted">
             {entries.length} entries{entries.length > 50 ? ' (showing first 50)' : ''}
           </span>
         </div>
@@ -160,11 +160,11 @@ export default function TimelineView({ projectKey }) {
 
       {/* Timeline Chart */}
       {chartData.length === 0 ? (
-        <div className="bg-white rounded-lg border border-gray-200 p-8 text-center text-sm text-gray-400">
+        <div className="bg-surface rounded-lg border border-edge p-8 text-center text-sm text-content-muted">
           No timeline data available. Issues need start dates to appear here.
         </div>
       ) : (
-        <div className="bg-white rounded-lg border border-gray-200 p-4">
+        <div className="bg-surface rounded-lg border border-edge p-4">
           <ResponsiveContainer width="100%" height={Math.max(300, chartData.length * 36 + 60)}>
             <BarChart
               data={chartData}
@@ -206,7 +206,7 @@ export default function TimelineView({ projectKey }) {
           </ResponsiveContainer>
 
           {/* Legend */}
-          <div className="flex flex-wrap items-center gap-3 mt-4 pt-3 border-t border-gray-100">
+          <div className="flex flex-wrap items-center gap-3 mt-4 pt-3 border-t border-edge">
             {Object.entries(
               chartData.reduce((acc, d) => {
                 if (!acc[d.issue_type]) acc[d.issue_type] = true;
@@ -218,12 +218,12 @@ export default function TimelineView({ projectKey }) {
                   className="w-3 h-3 rounded-sm"
                   style={{ backgroundColor: getTypeColor(type).hex }}
                 />
-                <span className="text-xs text-gray-600">{type}</span>
+                <span className="text-xs text-content-secondary">{type}</span>
               </div>
             ))}
             <div className="flex items-center gap-1.5 ml-2">
               <div className="w-3 h-3 rounded-sm border-2 border-red-500 bg-transparent" />
-              <span className="text-xs text-gray-600">Overdue</span>
+              <span className="text-xs text-content-secondary">Overdue</span>
             </div>
           </div>
         </div>

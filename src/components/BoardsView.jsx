@@ -34,7 +34,7 @@ export default function BoardsView() {
 
   if (loading && boards.length === 0) {
     return (
-      <div className="flex items-center justify-center h-48 text-gray-400">
+      <div className="flex items-center justify-center h-48 text-content-muted">
         <RotateCw className="h-5 w-5 animate-spin mr-2" />
         Loading boards...
       </div>
@@ -53,15 +53,15 @@ export default function BoardsView() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <LayoutGrid className="h-5 w-5 text-gray-400" />
-          <h3 className="text-sm font-medium text-gray-700">
+          <LayoutGrid className="h-5 w-5 text-content-muted" />
+          <h3 className="text-sm font-medium text-content-secondary">
             {boards.length} board{boards.length !== 1 ? 's' : ''}
           </h3>
         </div>
         <button
           onClick={fetchBoards}
           disabled={loading}
-          className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700 disabled:opacity-50"
+          className="flex items-center gap-1 text-sm text-primary-600 hover:text-primary-700 disabled:opacity-50"
         >
           <RotateCw className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`} />
           Refresh
@@ -69,7 +69,7 @@ export default function BoardsView() {
       </div>
 
       {boards.length === 0 ? (
-        <div className="bg-white rounded-lg border border-gray-200 p-8 text-center text-sm text-gray-400">
+        <div className="bg-surface rounded-lg border border-edge p-8 text-center text-sm text-content-muted">
           No boards found.
         </div>
       ) : (
@@ -100,15 +100,15 @@ function BoardCard({ board }) {
     }));
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-shadow">
+    <div className="bg-surface rounded-lg border border-edge p-4 hover:shadow-md transition-shadow">
       <div className="flex items-start justify-between mb-3">
         <div>
-          <h4 className="font-medium text-gray-900 text-sm">{board.board_name || board.name}</h4>
+          <h4 className="font-medium text-content text-sm">{board.board_name || board.name}</h4>
           {board.project_key && (
-            <p className="text-xs text-gray-500 mt-0.5">{board.project_key}</p>
+            <p className="text-xs text-content-muted mt-0.5">{board.project_key}</p>
           )}
         </div>
-        <span className="text-lg font-bold text-gray-700">{total}</span>
+        <span className="text-lg font-bold text-content-secondary">{total}</span>
       </div>
 
       {pieData.length > 0 ? (
@@ -145,15 +145,15 @@ function BoardCard({ board }) {
                     className="w-2.5 h-2.5 rounded-sm"
                     style={{ backgroundColor: item.color }}
                   />
-                  <span className="text-gray-600">{item.name}</span>
+                  <span className="text-content-secondary">{item.name}</span>
                 </div>
-                <span className="font-medium text-gray-700">{item.value}</span>
+                <span className="font-medium text-content-secondary">{item.value}</span>
               </div>
             ))}
           </div>
         </div>
       ) : (
-        <p className="text-xs text-gray-400">No issues</p>
+        <p className="text-xs text-content-muted">No issues</p>
       )}
     </div>
   );

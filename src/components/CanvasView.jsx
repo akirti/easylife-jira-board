@@ -71,7 +71,7 @@ export default function CanvasView({ projectKey }) {
 
   if (loading && rawNodes.length === 0) {
     return (
-      <div className="flex items-center justify-center h-96 text-gray-400">
+      <div className="flex items-center justify-center h-96 text-content-muted">
         <RotateCw className="h-5 w-5 animate-spin mr-2" />
         Loading canvas...
       </div>
@@ -93,7 +93,7 @@ export default function CanvasView({ projectKey }) {
         <select
           value={epicFilter}
           onChange={(e) => setEpicFilter(e.target.value)}
-          className="rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="rounded-md border border-edge px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
         >
           <option value="">All Epics</option>
           {epics.map((epic) => (
@@ -106,22 +106,22 @@ export default function CanvasView({ projectKey }) {
         <button
           onClick={refresh}
           disabled={loading}
-          className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700 disabled:opacity-50"
+          className="flex items-center gap-1 text-sm text-primary-600 hover:text-primary-700 disabled:opacity-50"
         >
           <RotateCw className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`} />
           Refresh
         </button>
 
-        <span className="text-xs text-gray-400 ml-auto">
+        <span className="text-xs text-content-muted ml-auto">
           {rawNodes.length} nodes, {styledEdges.length} edges
         </span>
       </div>
 
       {/* ReactFlow Canvas */}
       <div className="flex gap-4">
-        <div className="flex-1 h-[600px] w-full bg-gray-50 rounded-lg border border-gray-200 overflow-hidden" style={{ minHeight: 600 }}>
+        <div className="flex-1 h-[600px] w-full bg-surface-secondary rounded-lg border border-edge overflow-hidden" style={{ minHeight: 600 }}>
           {rawNodes.length === 0 ? (
-            <div className="flex items-center justify-center h-full text-gray-400 text-sm">
+            <div className="flex items-center justify-center h-full text-content-muted text-sm">
               No canvas data available. Try syncing issues first.
             </div>
           ) : (
@@ -153,58 +153,58 @@ export default function CanvasView({ projectKey }) {
 
         {/* Side panel: selected issue detail */}
         {selectedIssue && (
-          <div className="w-72 bg-white rounded-lg border border-gray-200 p-4 overflow-y-auto max-h-[600px]">
+          <div className="w-72 bg-surface rounded-lg border border-edge p-4 overflow-y-auto max-h-[600px]">
             <div className="flex items-center justify-between mb-3">
               <a
                 href={selectedIssue.url || '#'}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-mono text-sm text-blue-600 hover:underline font-medium"
+                className="font-mono text-sm text-primary-600 hover:underline font-medium"
               >
                 {selectedIssue.key}
               </a>
               <button
                 onClick={() => setSelectedIssue(null)}
-                className="text-gray-400 hover:text-gray-600 text-sm"
+                className="text-content-muted hover:text-content-secondary text-sm"
               >
                 &times;
               </button>
             </div>
 
-            <h3 className="text-sm font-medium text-gray-900 mb-3">{selectedIssue.summary}</h3>
+            <h3 className="text-sm font-medium text-content mb-3">{selectedIssue.summary}</h3>
 
             <dl className="space-y-2 text-xs">
               <div>
-                <dt className="text-gray-500">Type</dt>
+                <dt className="text-content-muted">Type</dt>
                 <dd className="font-medium">{selectedIssue.issue_type}</dd>
               </div>
               <div>
-                <dt className="text-gray-500">Status</dt>
+                <dt className="text-content-muted">Status</dt>
                 <dd className="font-medium">{selectedIssue.status}</dd>
               </div>
               <div>
-                <dt className="text-gray-500">Assignee</dt>
+                <dt className="text-content-muted">Assignee</dt>
                 <dd className="font-medium">{selectedIssue.assignee || 'Unassigned'}</dd>
               </div>
               <div>
-                <dt className="text-gray-500">Priority</dt>
+                <dt className="text-content-muted">Priority</dt>
                 <dd className="font-medium">{selectedIssue.priority || 'None'}</dd>
               </div>
               {selectedIssue.sprint && (
                 <div>
-                  <dt className="text-gray-500">Sprint</dt>
+                  <dt className="text-content-muted">Sprint</dt>
                   <dd className="font-medium">{selectedIssue.sprint}</dd>
                 </div>
               )}
               {selectedIssue.parent_key && (
                 <div>
-                  <dt className="text-gray-500">Parent</dt>
+                  <dt className="text-content-muted">Parent</dt>
                   <dd className="font-mono font-medium">{selectedIssue.parent_key}</dd>
                 </div>
               )}
               {selectedIssue.days_in_status != null && (
                 <div>
-                  <dt className="text-gray-500">Days in Status</dt>
+                  <dt className="text-content-muted">Days in Status</dt>
                   <dd className={`font-medium ${selectedIssue.days_in_status > 14 ? 'text-red-600' : ''}`}>
                     {selectedIssue.days_in_status}
                   </dd>
@@ -212,10 +212,10 @@ export default function CanvasView({ projectKey }) {
               )}
               {selectedIssue.labels?.length > 0 && (
                 <div>
-                  <dt className="text-gray-500">Labels</dt>
+                  <dt className="text-content-muted">Labels</dt>
                   <dd className="flex flex-wrap gap-1 mt-0.5">
                     {selectedIssue.labels.map((l) => (
-                      <span key={l} className="bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded text-[10px]">
+                      <span key={l} className="bg-surface-secondary text-content-secondary px-1.5 py-0.5 rounded text-[10px]">
                         {l}
                       </span>
                     ))}
@@ -224,8 +224,8 @@ export default function CanvasView({ projectKey }) {
               )}
               {selectedIssue.description_text && (
                 <div>
-                  <dt className="text-gray-500">Description</dt>
-                  <dd className="text-gray-700 mt-0.5 whitespace-pre-wrap line-clamp-6">
+                  <dt className="text-content-muted">Description</dt>
+                  <dd className="text-content-secondary mt-0.5 whitespace-pre-wrap line-clamp-6">
                     {selectedIssue.description_text}
                   </dd>
                 </div>

@@ -33,7 +33,7 @@ export default function MyMentionsView() {
 
   if (loading && mentions.length === 0) {
     return (
-      <div className="flex items-center justify-center h-48 text-gray-400">
+      <div className="flex items-center justify-center h-48 text-content-muted">
         <RotateCw className="h-5 w-5 animate-spin mr-2" />
         Loading mentions...
       </div>
@@ -52,15 +52,15 @@ export default function MyMentionsView() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <MessageCircle className="h-5 w-5 text-gray-400" />
-          <h3 className="text-sm font-medium text-gray-700">
+          <MessageCircle className="h-5 w-5 text-content-muted" />
+          <h3 className="text-sm font-medium text-content-secondary">
             {mentions.length} issue{mentions.length !== 1 ? 's' : ''} mentioning you
           </h3>
         </div>
         <button
           onClick={fetchMentions}
           disabled={loading}
-          className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700 disabled:opacity-50"
+          className="flex items-center gap-1 text-sm text-primary-600 hover:text-primary-700 disabled:opacity-50"
         >
           <RotateCw className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`} />
           Refresh
@@ -68,40 +68,40 @@ export default function MyMentionsView() {
       </div>
 
       {mentions.length === 0 ? (
-        <div className="bg-white rounded-lg border border-gray-200 p-8 text-center text-sm text-gray-400">
+        <div className="bg-surface rounded-lg border border-edge p-8 text-center text-sm text-content-muted">
           No mentions found. You will see issues here when someone tags you in a comment.
         </div>
       ) : (
-        <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+        <div className="bg-surface rounded-lg border border-edge overflow-hidden">
+          <table className="min-w-full divide-y divide-edge">
+            <thead className="bg-surface-secondary">
               <tr>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Key</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Summary</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Assignee</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Updated</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-content-muted uppercase tracking-wider">Key</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-content-muted uppercase tracking-wider">Summary</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-content-muted uppercase tracking-wider">Type</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-content-muted uppercase tracking-wider">Status</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-content-muted uppercase tracking-wider">Assignee</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-content-muted uppercase tracking-wider">Updated</th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-surface divide-y divide-edge">
               {mentions.map((issue) => {
                 const typeColor = getTypeColor(issue.issue_type);
                 const statusColor = getStatusColor(issue.status_category);
                 return (
-                  <tr key={issue.key} className="hover:bg-gray-50">
+                  <tr key={issue.key} className="hover:bg-surface-hover">
                     <td className="px-4 py-3 whitespace-nowrap">
                       <a
                         href={issue.url || '#'}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="font-mono text-sm text-blue-600 hover:underline"
+                        className="font-mono text-sm text-primary-600 hover:underline"
                       >
                         {issue.key}
                       </a>
                     </td>
                     <td className="px-4 py-3">
-                      <span className="text-sm text-gray-900 line-clamp-1 max-w-sm block">
+                      <span className="text-sm text-content line-clamp-1 max-w-sm block">
                         {issue.summary}
                       </span>
                     </td>
@@ -115,10 +115,10 @@ export default function MyMentionsView() {
                         {issue.status}
                       </span>
                     </td>
-                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-content-secondary">
                       {issue.assignee || 'Unassigned'}
                     </td>
-                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-content-muted">
                       {issue.updated ? new Date(issue.updated).toLocaleDateString() : '-'}
                     </td>
                   </tr>

@@ -34,14 +34,14 @@ export default function BoardView({ projectKey }) {
       <StatsHeader stats={stats} />
 
       {/* Filter Bar */}
-      <div className="bg-white rounded-lg border border-gray-200 p-4">
+      <div className="bg-surface rounded-lg border border-edge p-4">
         <div className="flex flex-wrap items-center gap-3">
-          <Filter className="h-4 w-4 text-gray-400" />
+          <Filter className="h-4 w-4 text-content-muted" />
 
           <select
             value={filters.status}
             onChange={(e) => updateFilters({ status: e.target.value })}
-            className="rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="rounded-md border border-edge px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
           >
             <option value="">All Statuses</option>
             {STATUS_OPTIONS.map((s) => (
@@ -52,7 +52,7 @@ export default function BoardView({ projectKey }) {
           <select
             value={filters.issue_type}
             onChange={(e) => updateFilters({ issue_type: e.target.value })}
-            className="rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="rounded-md border border-edge px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
           >
             <option value="">All Types</option>
             {ISSUE_TYPES.map((t) => (
@@ -65,25 +65,25 @@ export default function BoardView({ projectKey }) {
             placeholder="Assignee..."
             value={filters.assignee}
             onChange={(e) => updateFilters({ assignee: e.target.value })}
-            className="rounded-md border border-gray-300 px-3 py-1.5 text-sm w-36 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="rounded-md border border-edge px-3 py-1.5 text-sm w-36 focus:outline-none focus:ring-2 focus:ring-primary-500"
           />
 
-          <label className="flex items-center gap-1.5 text-sm text-gray-600 cursor-pointer">
+          <label className="flex items-center gap-1.5 text-sm text-content-secondary cursor-pointer">
             <input
               type="checkbox"
               checked={filters.flagged}
               onChange={(e) => updateFilters({ flagged: e.target.checked })}
-              className="rounded border-gray-300"
+              className="rounded border-edge"
             />
             Flagged
           </label>
 
-          <label className="flex items-center gap-1.5 text-sm text-gray-600 cursor-pointer">
+          <label className="flex items-center gap-1.5 text-sm text-content-secondary cursor-pointer">
             <input
               type="checkbox"
               checked={filters.overdue}
               onChange={(e) => updateFilters({ overdue: e.target.checked })}
-              className="rounded border-gray-300"
+              className="rounded border-edge"
             />
             Overdue
           </label>
@@ -91,7 +91,7 @@ export default function BoardView({ projectKey }) {
           {hasActiveFilters && (
             <button
               onClick={resetFilters}
-              className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700"
+              className="flex items-center gap-1 text-sm text-content-muted hover:text-content-secondary"
             >
               <X className="h-3.5 w-3.5" />
               Clear
@@ -101,7 +101,7 @@ export default function BoardView({ projectKey }) {
           <button
             onClick={refresh}
             disabled={loading}
-            className="ml-auto flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700 disabled:opacity-50"
+            className="ml-auto flex items-center gap-1 text-sm text-primary-600 hover:text-primary-700 disabled:opacity-50"
           >
             <RotateCw className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`} />
             Refresh
@@ -117,32 +117,32 @@ export default function BoardView({ projectKey }) {
       )}
 
       {/* Issues Table */}
-      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+      <div className="bg-surface rounded-lg border border-edge overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+          <table className="min-w-full divide-y divide-edge">
+            <thead className="bg-surface-secondary">
               <tr>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Key</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Summary</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Assignee</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Priority</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Days</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sprint</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-8">Flag</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-content-muted uppercase tracking-wider">Key</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-content-muted uppercase tracking-wider">Summary</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-content-muted uppercase tracking-wider">Type</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-content-muted uppercase tracking-wider">Status</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-content-muted uppercase tracking-wider">Assignee</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-content-muted uppercase tracking-wider">Priority</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-content-muted uppercase tracking-wider">Days</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-content-muted uppercase tracking-wider">Sprint</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-content-muted uppercase tracking-wider w-8">Flag</th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-surface divide-y divide-edge">
               {loading && issues.length === 0 ? (
                 <tr>
-                  <td colSpan={9} className="px-4 py-8 text-center text-sm text-gray-400">
+                  <td colSpan={9} className="px-4 py-8 text-center text-sm text-content-muted">
                     Loading issues...
                   </td>
                 </tr>
               ) : issues.length === 0 ? (
                 <tr>
-                  <td colSpan={9} className="px-4 py-8 text-center text-sm text-gray-400">
+                  <td colSpan={9} className="px-4 py-8 text-center text-sm text-content-muted">
                     No issues found
                   </td>
                 </tr>
@@ -156,20 +156,20 @@ export default function BoardView({ projectKey }) {
                   return (
                     <tr
                       key={issue.key}
-                      className={`hover:bg-gray-50 ${issue.flagged ? 'border-l-4 border-l-red-500' : ''}`}
+                      className={`hover:bg-surface-hover ${issue.flagged ? 'border-l-4 border-l-red-500' : ''}`}
                     >
                       <td className="px-4 py-3 whitespace-nowrap">
                         <a
                           href={issue.url || '#'}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="font-mono text-sm text-blue-600 hover:underline"
+                          className="font-mono text-sm text-primary-600 hover:underline"
                         >
                           {issue.key}
                         </a>
                       </td>
                       <td className="px-4 py-3">
-                        <span className="text-sm text-gray-900 line-clamp-1 max-w-xs block">
+                        <span className="text-sm text-content line-clamp-1 max-w-xs block">
                           {issue.summary}
                         </span>
                       </td>
@@ -183,7 +183,7 @@ export default function BoardView({ projectKey }) {
                           {issue.status}
                         </span>
                       </td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600 truncate max-w-[120px]">
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-content-secondary truncate max-w-[120px]">
                         {issue.assignee || 'Unassigned'}
                       </td>
                       <td className="px-4 py-3 whitespace-nowrap text-sm">
@@ -192,11 +192,11 @@ export default function BoardView({ projectKey }) {
                         </span>
                       </td>
                       <td className="px-4 py-3 whitespace-nowrap">
-                        <span className={`text-sm font-medium ${isStale ? 'text-red-600' : 'text-gray-500'}`}>
+                        <span className={`text-sm font-medium ${isStale ? 'text-red-600' : 'text-content-muted'}`}>
                           {daysInStatus}
                         </span>
                       </td>
-                      <td className="px-4 py-3 whitespace-nowrap text-xs text-gray-500 truncate max-w-[100px]">
+                      <td className="px-4 py-3 whitespace-nowrap text-xs text-content-muted truncate max-w-[100px]">
                         {issue.sprint || '-'}
                       </td>
                       <td className="px-4 py-3 whitespace-nowrap text-center">
@@ -212,25 +212,25 @@ export default function BoardView({ projectKey }) {
 
         {/* Pagination */}
         {totalCount > 0 && (
-          <div className="flex items-center justify-between px-4 py-3 border-t border-gray-200 bg-gray-50">
-            <p className="text-sm text-gray-600">
+          <div className="flex items-center justify-between px-4 py-3 border-t border-edge bg-surface-secondary">
+            <p className="text-sm text-content-secondary">
               Showing {(page - 1) * pageSize + 1}–{Math.min(page * pageSize, totalCount)} of {totalCount}
             </p>
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setPage(Math.max(1, page - 1))}
                 disabled={page <= 1}
-                className="p-1 rounded hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed"
+                className="p-1 rounded hover:bg-surface-hover disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 <ChevronLeft className="h-5 w-5" />
               </button>
-              <span className="text-sm text-gray-600">
+              <span className="text-sm text-content-secondary">
                 Page {page} of {totalPages}
               </span>
               <button
                 onClick={() => setPage(Math.min(totalPages, page + 1))}
                 disabled={page >= totalPages}
-                className="p-1 rounded hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed"
+                className="p-1 rounded hover:bg-surface-hover disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 <ChevronRight className="h-5 w-5" />
               </button>
