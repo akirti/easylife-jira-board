@@ -42,6 +42,7 @@ export { default as TreeDetailPanel } from './components/portfolio/TreeDetailPan
 export { default as TreeFilterBar } from './components/portfolio/TreeFilterBar';
 
 export { default as RelatedItemsPanel } from './components/portfolio/RelatedItemsPanel';
+export { default as ExportButton } from './components/portfolio/ExportButton';
 
 // Portfolio hooks
 export { usePortfolioData } from './hooks/usePortfolioData';

@@ -114,5 +114,8 @@ export function createJiraApiClient(baseUrl, getToken) {
 
     getRelatedItems: (key) =>
       client.get(`/portfolio/issues/${key}/related`).then(r => r.data),
+
+    exportPortfolio: (data) =>
+      client.post('/portfolio/exports/portfolio', data, { responseType: 'blob' }).then(r => r.data),
   };
 }
