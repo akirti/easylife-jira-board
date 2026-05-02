@@ -111,5 +111,8 @@ export function createJiraApiClient(baseUrl, getToken) {
 
     getCycleMetrics: (key) =>
       client.get(`/portfolio/issues/${key}/cycle`).then(r => r.data),
+
+    getRelatedItems: (key) =>
+      client.get(`/portfolio/issues/${key}/related`).then(r => r.data),
   };
 }

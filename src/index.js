@@ -41,6 +41,8 @@ export { default as TreeExplorer } from './components/portfolio/TreeExplorer';
 export { default as TreeDetailPanel } from './components/portfolio/TreeDetailPanel';
 export { default as TreeFilterBar } from './components/portfolio/TreeFilterBar';
 
+export { default as RelatedItemsPanel } from './components/portfolio/RelatedItemsPanel';
+
 // Portfolio hooks
 export { usePortfolioData } from './hooks/usePortfolioData';
 export { useSnapshotData } from './hooks/useSnapshotData';
