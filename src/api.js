@@ -108,5 +108,8 @@ export function createJiraApiClient(baseUrl, getToken) {
       client.post('/portfolio/snapshots/run', {
         project_key: projectKey, as_of: asOf,
       }).then(r => r.data),
+
+    getCycleMetrics: (key) =>
+      client.get(`/portfolio/issues/${key}/cycle`).then(r => r.data),
   };
 }

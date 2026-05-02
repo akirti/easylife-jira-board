@@ -33,6 +33,8 @@ export { default as RollupTable } from './components/portfolio/RollupTable';
 export { default as TshirtBadge } from './components/portfolio/TshirtBadge';
 export { default as ProgressBar } from './components/portfolio/ProgressBar';
 export { default as Sparkline } from './components/portfolio/Sparkline';
+export { default as CycleTimeBar } from './components/portfolio/CycleTimeBar';
+export { default as TabSwitcher } from './components/portfolio/TabSwitcher';
 
 export { default as OverviewView } from './components/portfolio/OverviewView';
 export { default as TreeExplorer } from './components/portfolio/TreeExplorer';
@@ -43,3 +45,4 @@ export { default as TreeFilterBar } from './components/portfolio/TreeFilterBar';
 export { usePortfolioData } from './hooks/usePortfolioData';
 export { useSnapshotData } from './hooks/useSnapshotData';
 export { useTreeData } from './hooks/useTreeData';
+export { useCycleTimeData } from './hooks/useCycleTimeData';

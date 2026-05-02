@@ -4,8 +4,67 @@ import { useJiraApi } from '../../hooks/useJiraApi';
 import { getTypeColor } from '../../constants';
 import TshirtBadge from './TshirtBadge';
 import ProgressBar from './ProgressBar';
+import CycleTimeBar from './CycleTimeBar';
+import TabSwitcher from './TabSwitcher';
 
-function StoryRow({ story }) {
+function getTabColumns(tab) {
+  switch (tab) {
+    case 'schedule':
+      return [
+        { key: 'target_start', label: 'Start', width: 'w-24', align: 'text-left' },
+        { key: 'target_end', label: 'End', width: 'w-24', align: 'text-left' },
+        { key: 'days_to_done', label: 'Days', width: 'w-16', align: 'text-right' },
+      ];
+    case 'cycle':
+      return [
+        { key: 'cycle_bar', label: 'Cycle Time', width: 'w-40', align: 'text-left' },
+      ];
+    default: // progress
+      return [
+        { key: 'cumulative', label: 'Cumul.', width: 'w-20', align: 'text-right' },
+        { key: 'remaining', label: 'Remain.', width: 'w-20', align: 'text-right' },
+        { key: 'progress', label: 'Progress', width: 'w-28', align: 'text-left' },
+      ];
+  }
+}
+
+function TabCells({ tab, data, rollups }) {
+  switch (tab) {
+    case 'schedule':
+      return (
+        <>
+          <td className="py-2 px-2 text-xs text-content-secondary">{data.target_start || '\u2014'}</td>
+          <td className="py-2 px-2 text-xs text-content-secondary">{data.target_end || '\u2014'}</td>
+          <td className="py-2 px-2 text-xs text-right tabular-nums text-content">
+            {data.days_to_done != null ? `${data.days_to_done.toFixed(0)}d` : '\u2014'}
+          </td>
+        </>
+      );
+    case 'cycle':
+      return (
+        <td className="py-2 px-2 w-40">
+          <CycleTimeBar devDays={data.dev_days} qaDays={data.qa_days}
+                        stageDays={data.stage_days} prodDays={data.prod_days} />
+        </td>
+      );
+    default:
+      return (
+        <>
+          <td className="py-2 px-2 text-right text-xs font-medium tabular-nums text-content">
+            {rollups?.cumulative_points || 0}
+          </td>
+          <td className="py-2 px-2 text-right text-xs tabular-nums text-content-secondary">
+            {rollups?.remaining_points || 0}
+          </td>
+          <td className="py-2 px-2 w-28">
+            <ProgressBar cumulative={rollups?.cumulative_points} remaining={rollups?.remaining_points} />
+          </td>
+        </>
+      );
+  }
+}
+
+function StoryRow({ story, tab }) {
   const typeColor = getTypeColor(story.issue_type);
   return (
     <tr className="text-sm border-b border-edge last:border-b-0">
@@ -19,18 +78,24 @@ function StoryRow({ story }) {
         </span>
       </td>
       <td className="py-1.5 px-2 text-xs text-content-secondary">{story.status}</td>
-      <td className="py-1.5 px-2 text-right text-xs tabular-nums text-content">
-        {story.story_points ?? '\u2014'}
-        {story.in_remaining && (
-          <span className="ml-1 text-amber-500" title="Counts toward remaining">*</span>
-        )}
-      </td>
-      <td className="py-1.5 px-2 text-xs text-content-muted">{story.assignee || '\u2014'}</td>
+      {tab === 'progress' ? (
+        <>
+          <td className="py-1.5 px-2 text-right text-xs tabular-nums text-content">
+            {story.story_points ?? '\u2014'}
+            {story.in_remaining && (
+              <span className="ml-1 text-amber-500" title="Counts toward remaining">*</span>
+            )}
+          </td>
+          <td className="py-1.5 px-2 text-xs text-content-muted">{story.assignee || '\u2014'}</td>
+        </>
+      ) : (
+        <TabCells tab={tab} data={story} rollups={null} />
+      )}
     </tr>
   );
 }
 
-function EpicRow({ epic }) {
+function EpicRow({ epic, tab }) {
   const [expanded, setExpanded] = useState(false);
   const [stories, setStories] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -76,22 +141,14 @@ function EpicRow({ epic }) {
           <TshirtBadge size={epic.tshirt_size} fallback={epic.uses_tshirt_fallback} />
         </td>
         <td className="py-2 px-2 text-xs text-content-secondary">{epic.status}</td>
-        <td className="py-2 px-2 text-right text-xs font-medium tabular-nums text-content">
-          {r.cumulative_points || 0}
-        </td>
-        <td className="py-2 px-2 text-right text-xs tabular-nums text-content-secondary">
-          {r.remaining_points || 0}
-        </td>
-        <td className="py-2 px-2 w-28">
-          <ProgressBar cumulative={r.cumulative_points} remaining={r.remaining_points} />
-        </td>
+        <TabCells tab={tab} data={epic} rollups={r} />
       </tr>
-      {expanded && stories.map(s => <StoryRow key={s.key} story={s} />)}
+      {expanded && stories.map(s => <StoryRow key={s.key} story={s} tab={tab} />)}
     </>
   );
 }
 
-function CapabilityRow({ cap }) {
+function CapabilityRow({ cap, tab }) {
   const [expanded, setExpanded] = useState(false);
   const [tree, setTree] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -135,20 +192,18 @@ function CapabilityRow({ cap }) {
           <TshirtBadge size={cap.tshirt_size} />
         </td>
         <td className="py-2.5 px-2 text-xs text-content-secondary">{cap.status}</td>
-        <td className="py-2.5 px-2 text-right tabular-nums text-content">{r.cumulative_points || 0}</td>
-        <td className="py-2.5 px-2 text-right tabular-nums text-content-secondary">{r.remaining_points || 0}</td>
-        <td className="py-2.5 px-2 w-28">
-          <ProgressBar cumulative={r.cumulative_points} remaining={r.remaining_points} />
-        </td>
+        <TabCells tab={tab} data={cap} rollups={r} />
       </tr>
       {expanded && tree && tree.epics && tree.epics.map(epic => (
-        <EpicRow key={epic.key} epic={epic} />
+        <EpicRow key={epic.key} epic={epic} tab={tab} />
       ))}
     </>
   );
 }
 
 export default function RollupTable({ capabilities }) {
+  const [activeTab, setActiveTab] = useState('progress');
+
   if (!capabilities || capabilities.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center">
@@ -164,26 +219,34 @@ export default function RollupTable({ capabilities }) {
     );
   }
 
+  const tabColumns = getTabColumns(activeTab);
+
   return (
-    <div className="bg-surface rounded-lg border border-edge overflow-hidden">
-      <table className="w-full text-left" role="treegrid">
-        <thead>
-          <tr className="bg-surface-secondary border-b border-edge">
-            <th className="py-2.5 px-2 text-xs font-medium text-content-muted uppercase tracking-wider w-32">Key</th>
-            <th className="py-2.5 px-2 text-xs font-medium text-content-muted uppercase tracking-wider">Summary</th>
-            <th className="py-2.5 px-2 text-xs font-medium text-content-muted uppercase tracking-wider w-16">Size</th>
-            <th className="py-2.5 px-2 text-xs font-medium text-content-muted uppercase tracking-wider w-28">Status</th>
-            <th className="py-2.5 px-2 text-xs font-medium text-content-muted uppercase tracking-wider w-20 text-right">Cumul.</th>
-            <th className="py-2.5 px-2 text-xs font-medium text-content-muted uppercase tracking-wider w-20 text-right">Remain.</th>
-            <th className="py-2.5 px-2 text-xs font-medium text-content-muted uppercase tracking-wider w-28">Progress</th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-edge">
-          {capabilities.map(cap => (
-            <CapabilityRow key={cap.key} cap={cap} />
-          ))}
-        </tbody>
-      </table>
+    <div>
+      <TabSwitcher activeTab={activeTab} onTabChange={setActiveTab} />
+      <div className="bg-surface rounded-lg border border-edge overflow-hidden">
+        <table className="w-full text-left" role="treegrid">
+          <thead>
+            <tr className="bg-surface-secondary border-b border-edge">
+              <th className="py-2.5 px-2 text-xs font-medium text-content-muted uppercase tracking-wider w-32">Key</th>
+              <th className="py-2.5 px-2 text-xs font-medium text-content-muted uppercase tracking-wider">Summary</th>
+              <th className="py-2.5 px-2 text-xs font-medium text-content-muted uppercase tracking-wider w-16">Size</th>
+              <th className="py-2.5 px-2 text-xs font-medium text-content-muted uppercase tracking-wider w-28">Status</th>
+              {tabColumns.map(col => (
+                <th key={col.key}
+                    className={`py-2.5 px-2 text-xs font-medium text-content-muted uppercase tracking-wider ${col.width} ${col.align}`}>
+                  {col.label}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-edge">
+            {capabilities.map(cap => (
+              <CapabilityRow key={cap.key} cap={cap} tab={activeTab} />
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
