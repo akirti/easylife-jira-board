@@ -7,7 +7,7 @@ import axios from 'axios';
  * @returns {object} API methods
  */
 export function createJiraApiClient(baseUrl, getToken) {
-  const client = axios.create({ baseURL: baseUrl });
+  const client = axios.create({ baseURL: baseUrl, withCredentials: true });
 
   client.interceptors.request.use(async (config) => {
     const token = typeof getToken === 'function' ? await getToken() : getToken;

@@ -31,20 +31,22 @@ export default function TimelineView({ projectKey }) {
 
   // Transform entries for recharts
   const { chartData, minDate, maxDate } = useMemo(() => {
-    if (!entries.length) return { chartData: [], minDate: 0, maxDate: 0 };
+    if (!entries || !entries.length) return { chartData: [], minDate: 0, maxDate: 0 };
 
     const now = Date.now();
     let earliest = Infinity;
     let latest = -Infinity;
 
-    const data = entries.filter((e) => e && e.key).map((entry) => {
-      const start = entry.start ? new Date(entry.start).getTime() : now;
+    const data = entries.filter((e) => e && e.key && (e.start || e.end || e.created)).map((entry) => {
+      const start = entry.start ? new Date(entry.start).getTime() : (entry.created ? new Date(entry.created).getTime() : now);
       const end = entry.end ? new Date(entry.end).getTime() : now;
+      // Ensure end is after start
+      const safeEnd = end > start ? end : start + 86400000; // +1 day minimum
       const dueDate = entry.due_date ? new Date(entry.due_date).getTime() : null;
       const isOverdue = entry.overdue || (dueDate && dueDate < now && !entry.resolution_date);
 
       earliest = Math.min(earliest, start);
-      latest = Math.max(latest, end);
+      latest = Math.max(latest, safeEnd);
 
       return {
         key: entry.key,
@@ -53,17 +55,21 @@ export default function TimelineView({ projectKey }) {
         status: entry.status || '',
         assignee: entry.assignee || 'Unassigned',
         start,
-        end,
-        duration: [start, end],
+        end: safeEnd,
+        duration: [start, safeEnd],
         overdue: isOverdue,
         fullSummary: entry.summary || entry.key,
       };
     });
 
+    // Safety: ensure valid date range
+    const safeMin = earliest === Infinity ? now - 86400000 * 30 : earliest;
+    const safeMax = latest === -Infinity ? now : latest;
+
     return {
       chartData: data.slice(0, 50), // Limit to 50 for readability
-      minDate: earliest,
-      maxDate: latest,
+      minDate: safeMin,
+      maxDate: safeMax === safeMin ? safeMax + 86400000 : safeMax,
     };
   }, [entries]);
 
