@@ -33,3 +33,24 @@ export const EDGE_STYLES = {
 
 export const getTypeColor = (type) => TYPE_COLORS[type] || TYPE_COLORS.Task;
 export const getStatusColor = (category) => STATUS_CATEGORIES[category] || STATUS_CATEGORIES['To Do'];
+
+// Portfolio — T-shirt size colors
+export const TSHIRT_COLORS = {
+  XS:  { bg: 'bg-slate-100',   text: 'text-slate-700',   label: 'XS' },
+  S:   { bg: 'bg-sky-100',     text: 'text-sky-700',     label: 'S' },
+  M:   { bg: 'bg-emerald-100', text: 'text-emerald-700', label: 'M' },
+  L:   { bg: 'bg-amber-100',   text: 'text-amber-700',   label: 'L' },
+  XL:  { bg: 'bg-orange-100',  text: 'text-orange-700',  label: 'XL' },
+  XXL: { bg: 'bg-rose-100',    text: 'text-rose-700',    label: 'XXL' },
+};
+
+export const getTshirtColor = (size) =>
+  TSHIRT_COLORS[size] || { bg: 'bg-slate-100', text: 'text-slate-600', label: size || '?' };
+
+// Cycle time bucket colors
+export const CYCLE_COLORS = {
+  dev:   { bg: 'bg-blue-500',   label: 'Dev' },
+  qa:    { bg: 'bg-amber-500',  label: 'QA' },
+  stage: { bg: 'bg-purple-500', label: 'Stage' },
+  prod:  { bg: 'bg-green-500',  label: 'Prod' },
+};

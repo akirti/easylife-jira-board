@@ -79,5 +79,34 @@ export function createJiraApiClient(baseUrl, getToken) {
 
     getIssue: (key) =>
       client.get(`/issues/${key}`).then((r) => r.data),
+
+    // Portfolio
+    getCapabilities: (projectKey, params = {}) =>
+      client.get('/portfolio/capabilities', {
+        params: { project_key: projectKey, ...params },
+      }).then(r => r.data),
+
+    getCapabilityTree: (key, depth = 'epic') =>
+      client.get(`/portfolio/capabilities/${key}/tree`, {
+        params: { depth },
+      }).then(r => r.data),
+
+    getEpicChildren: (key, params = {}) =>
+      client.get(`/portfolio/epics/${key}/children`, { params }).then(r => r.data),
+
+    getSnapshotSeries: (key, metric = 'remaining', fromDate, toDate) =>
+      client.get(`/portfolio/snapshots/${key}`, {
+        params: { metric, from: fromDate, to: toDate },
+      }).then(r => r.data),
+
+    triggerRecompute: (projectKey) =>
+      client.post('/portfolio/recompute', null, {
+        params: { project_key: projectKey },
+      }).then(r => r.data),
+
+    runSnapshot: (projectKey, asOf) =>
+      client.post('/portfolio/snapshots/run', {
+        project_key: projectKey, as_of: asOf,
+      }).then(r => r.data),
   };
 }
